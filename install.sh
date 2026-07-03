@@ -18,7 +18,7 @@ fi
 # ====================================================================
 # 1. INSTALL SYSTEM DEPENDENCIES
 # ====================================================================
-sudo apt update && sudo apt install -y uidmap build-essential unzip git curl ripgrep fd-find xclip fzf eza bat
+sudo apt update && sudo apt install -y uidmap build-essential unzip git curl ripgrep fd-find xclip zsh eza bat
 
 # ====================================================================
 # 2. CHANGE DEFAULT SHELL
