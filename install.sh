@@ -18,7 +18,7 @@ fi
 # ====================================================================
 # 1. INSTALL SYSTEM DEPENDENCIES
 # ====================================================================
-sudo apt update && sudo apt install -y uidmap build-essential unzip git curl ripgrep fd-find xclip zsh fzf eza bat
+sudo apt update && sudo apt install -y uidmap build-essential unzip git curl ripgrep fd-find xclip fzf eza bat
 
 # ====================================================================
 # 2. CHANGE DEFAULT SHELL
@@ -26,14 +26,11 @@ sudo apt update && sudo apt install -y uidmap build-essential unzip git curl rip
 chsh -s $(which zsh)
 
 # ====================================================================
-# 3. CREATE SYMLINKS
+# 3. install zsh from git 
 # ====================================================================
-ln -sf ~/dotfiles/zshrc ~/.zshrc
-mkdir -p ~/.config/tmux
-ln -sf ~/dotfiles/tmux/tmux.conf ~/.config/tmux/tmux.conf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
 
-mkdir -p ~/.config/nvim
-ln -sf ~/dotfiles/nvim-lua ~/.config/nvim/lua
 
 # ====================================================================
 # 4. CLONE THIRD-PARTY TOOLS
@@ -51,10 +48,15 @@ curl -sS https://starship.rs/install.sh | sh -s -- -y
 # 6. CONDITIONAL NEOVIM INSTALLATION
 # ====================================================================
 if [ "$IS_PI" = true ]; then
-    echo "📦 Installing Neovim via APT for ARM compatibility..."
-    # Warning: Standard Pi OS/Ubuntu APT may pull Neovim v0.9.x. 
-    # If LazyVim complains, you may need to build Neovim from source later.
-    sudo apt install -y neovim
+        echo "📦 Installing Neovim via APT for ARM compatibility..."
+	# 1. Download the ARM64 pre-compiled binary for your Raspberry Pi
+	curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.appimage
+	
+	# 2. Make it executable
+	chmod +x nvim-linux-arm64.appimage
+	
+	# 3. Move it to your local bin folder
+	sudo mv nvim-linux-arm64.appimage /usr/local/bin/nvim
 else
     echo "📥 Downloading official x86_64 Neovim release v0.10+..."
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
@@ -72,4 +74,15 @@ if [ ! -d ~/.config/nvim/.git ]; then
     git clone https://github.com/LazyVim/starter ~/.config/nvim
 fi
 
+# ====================================================================
+# 3. CREATE SYMLINKS
+# ====================================================================
+ln -sf ~/dotfiles/zshrc ~/.zshrc
+mkdir -p ~/.config/tmux
+ln -sf ~/dotfiles/tmux/tmux.conf ~/.config/tmux/tmux.conf
+
+mkdir -p ~/.config/nvim
+ln -sf ~/dotfiles/nvim-lua ~/.config/nvim/lua
+ln -sf ~/dotfiles/starship.toml ~/.config/starship.toml
 echo "✅ Installation complete! Please restart your terminal or type 'zsh'."
+echo "Remember to reload tmux - CTRL+b CTRL+I"

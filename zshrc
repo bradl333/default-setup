@@ -66,4 +66,4 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Triggers Starship to build the shell prompt interface
 eval "$(starship init zsh)"
-
+alias vim='/usr/bin/vim.gtk3'

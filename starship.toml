@@ -1,0 +1,41 @@
+# =====================================================================
+# 1. MAIN LAYOUT
+# =====================================================================
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$fill\
+${custom.cpu_usage}\
+${custom.cpu_temp}\
+$cmd_duration\
+$line_break\
+$character"""
+
+# This module handles the empty space pushing the CPU metrics to the right
+[fill]
+symbol = " " 
+
+# =====================================================================
+# 2. CUSTOM SYSTEM METRICS (LINUX)
+# =====================================================================
+# Bulletproof CPU Usage (Uses /proc/loadavg for instant, lag-free metrics)
+[custom.cpu_usage]
+command = "awk '{print $1*100/4\"%\"}' /proc/loadavg" # Replaces '4' with your CPU core count if you want exact scale
+style = "bold yellow"
+format = "[$symbol$output](_style) "
+symbol = "💻 "
+when="true"
+disabled = false
+
+
+# Bulletproof CPU Temperature (Reads directly from the Linux system thermal zone)
+[custom.cpu_temp]
+command = "awk '{printf \"%.1f°C\\n\", $1/1000}' /sys/class/thermal/thermal_zone0/temp"
+style = "bold red"
+format = "[$symbol$output]($style) "
+symbol = "🔥 "
+when="true"
+disabled = false
